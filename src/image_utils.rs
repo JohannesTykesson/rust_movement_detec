@@ -18,10 +18,16 @@ pub fn read_image_grayscale(_path: String) -> Vec<f32> {
     let img = image::open(_path).expect("File not found!");
     let image_grayscale: ImageBuffer<Luma<u8>, Vec<u8>> = img.to_luma8();
     let (width, height) = img.dimensions();
+    println!("Img found with dims w*x {}*{}", width, height);
     let mut pixel_values: Vec<f32>  = vec![0.0; usize::try_from(width).unwrap() * usize::try_from(height).unwrap()];
-    image_grayscale.iter().map(|it| it).for_each( |it : &u8|
+    image_grayscale.iter().for_each(|f|
+        pixel_values.push((*f as f32) / 255_f32)
+    );
+    /*image_grayscale.iter().map(|it| it).for_each( |it : &u8|
         pixel_values.push((*it as f32) / 255_f32)
     );
+    */
+    println!("re {}", pixel_values.capacity());
     return pixel_values;
 }
 
@@ -29,12 +35,17 @@ pub fn read_image_dimensions(_path: String) -> (u32, u32) {
     return image::open(_path).expect("File not found!").dimensions();
 }
 
-pub fn create_grayscale_image(_image_vec: &Vec<f32>, _width: u32, _height: u32) {
+pub fn create_grayscale_image(_image_vec: Vec<f32>, _width: u32, _height: u32) {
+    println!("Creating img with dims w*h {}*{}", _width, _height);
+    let mut x: u32 = 0;
+    let mut y: u32 = 0;
     let mut image: GrayImage = ImageBuffer::new(_width, _height);
-    for width_index in 0.._width-1 {
-        for height_index in 0.._height-1 {
-            let idx = (width_index*height_index+height_index) as usize;
-            *image.get_pixel_mut(width_index, height_index) = image::Luma([(_image_vec[idx] * 255_f32) as u8]);
+    for idx in 0.._image_vec.capacity()-1 {
+        *image.get_pixel_mut(x, y) = image::Luma([(_image_vec[idx] * 255_f32) as u8]);
+        x += 1;
+        if x == _width {
+            x = 0;
+            y += 1;
         }
     }
     image.save("output.png").unwrap();
