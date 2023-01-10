@@ -3,7 +3,8 @@ use image::{ GenericImageView, ImageBuffer, Luma, GrayImage };
 pub fn read_image(_path: String) -> Vec<u8> {
     let img = image::open(_path).expect("File not found!");
     let (width, height) = img.dimensions();
-    let mut pixel_values: Vec<u8>  = vec![0; usize::try_from(width).unwrap() * usize::try_from(height).unwrap() * 5];
+    //let mut pixel_values: Vec<u8>  = vec![0; usize::try_from(width).unwrap() * usize::try_from(height).unwrap() * 5];
+    let mut pixel_values: Vec<u8> = Vec::new();
     for pixel in img.pixels() {
         let (_x, _y, _rgba) = pixel; 
         pixel_values.push(_rgba.0[0]); // R
@@ -19,7 +20,8 @@ pub fn read_image_grayscale(_path: String) -> Vec<f32> {
     let image_grayscale: ImageBuffer<Luma<u8>, Vec<u8>> = img.to_luma8();
     let (width, height) = img.dimensions();
     println!("Img found with dims w*x {}*{}", width, height);
-    let mut pixel_values: Vec<f32>  = vec![0.0; usize::try_from(width).unwrap() * usize::try_from(height).unwrap()];
+    //let mut pixel_values: Vec<f32>  = vec![0.0; usize::try_from(width).unwrap() * usize::try_from(height).unwrap()];
+    let mut pixel_values: Vec<f32> = Vec::new();
     image_grayscale.iter().for_each(|f|
         pixel_values.push((*f as f32) / 255_f32)
     );
