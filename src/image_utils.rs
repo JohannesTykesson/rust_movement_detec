@@ -27,7 +27,7 @@ pub fn read_image_dimensions(_path: String) -> (u32, u32) {
     return image::open(_path).expect("File not found!").dimensions();
 }
 
-pub fn create_grayscale_image(_image_vec: Vec<f32>, _width: u32, _height: u32) {
+pub fn create_grayscale_image(_image_vec: &Vec<f32>, _width: u32, _height: u32) {
     println!("Creating img with dims w*h {}*{}", _width, _height);
     let mut x: u32 = 0;
     let mut y: u32 = 0;
